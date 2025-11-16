@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wardrobe Call Off Form</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <!-- PAGE 1 - HOME -->
+  <div id="page-home" class="page active">
+    <h2>Welcome</h2>
+    <p>Welcome to the Wardrobe Order Form.</p>
+    <button class="btn" onclick="showPage('page-contact')">Get Started</button>
+  </div>
+
+  <!-- PAGE 2 - CONTACT -->
+  <div id="page-contact" class="page">
+    <h2>1. Job Information</h2>
+
+    <h3>Site Details</h3>
+    <label>Site Name <input id="siteName" type="text" /></label>
+    <label>Site Address <input id="siteAddress" type="text" /></label>
+    <label>Site Postcode <input id="sitePostcode" type="text" /></label>
+    <label>House Type <input id="houseType" type="text" /></label>
+    <label>Plot Number <input id="plotNumber" type="text" /></label>
+
+    <h3>Contact Details</h3>
+    <label>Site Contact Name <input id="contactName" type="text" /></label>
+    <label>Site Contact Phone <input id="contactNumber" type="tel" /></label>
+    <label>Site Contact Email <input id="contactEmail" type="text" /></label>
+
+    <div class="buttons">
+      <button class="btn" onclick="showPage('page-home')">Back</button>
+      <button class="btn" onclick="showPage('page-bedrooms')">Next</button>
+    </div>
+  </div>
+
+  <!-- PAGE 3 - BEDROOMS -->
+  <div id="page-bedrooms" class="page">
+    <h2>2. Wardrobe Design</h2>
+
+    <p>Use the below Form to place an order for your bedrooms. Additional information can be required in your Sales Brochure. Please Note: Maximum of 6 Bedrooms per order.</p>
+
+    <div id="bedroomContainer"></div>
+    <div class="buttons">
+      <button class="btn" onclick="addBedroom()">+ Add Bedroom</button>
+    </div>
+    <div class="buttons">
+      <button class="btn" onclick="showPage('page-contact')">Back</button>
+      <button class="btn" onclick="showPage('page-dates')">Next</button>
+    </div>
+  </div>
+
+  <!-- PAGE 4 - DELIVERY -->
+  <div id="page-dates" class="page">
+    <h2>3. Delivery Dates</h2>
+    <p>Please allow for 4 weeks from order.</p>
+    <label>Delivery Date <input id="deliveryDate" type="date" /></label>
+    <div class="buttons">
+      <button class="btn" onclick="showPage('page-bedrooms')">Back</button>
+      <button class="btn" onclick="showPage('page-review')">Next</button>
+    </div>
+  </div>
+
+  <!-- PAGE 5 - REVIEW -->
+  <div id="page-review" class="page">
+    <h2>Review Order</h2>
+    <div id="reviewContent"></div>
+
+    <label>Additional Information <input id="additionalInformation" type="text" /></label>
+
+    <div class="buttons">
+      <button class="btn" onclick="showPage('page-dates')">Back</button>
+      <button class="btn" onclick="confirmOrder()">Confirm (Email)</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* --- State / counters --- */
+let bedroomCount = 0;
+const maxBedrooms = 6;
+let nextBedroomInternalId = 1;
+
+/* --- Show page --- */
+function showPage(pageId){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const p = document.getElementById(pageId);
+  if(!p) return;
+  p.classList.add('active');
+
+  if(pageId==='page-bedrooms' && bedroomCount===0) addBedroom();
+  if(pageId==='page-review') buildReview();
+}
+
+/* --- Add Bedroom --- */
+function addBedroom(){
+  if(bedroomCount >= maxBedrooms){ alert(`Maximum of ${maxBedrooms} bedrooms reached.`); return; }
+
+  const container = document.getElementById('bedroomContainer');
+  const id = nextBedroomInternalId++;
+  bedroomCount++;
+
+  const block = document.createElement('div');
+  block.className = 'bedroom-block';
+  block.dataset.id = id;
+
+  block.innerHTML = `
+    <h3>Bedroom 1</h3>
+
+        <label><strong>Wardrobe Type</strong></label>
+    <div class="radio-row">
+      <label><input type="radio" name="type_${id}" value="Sliding" checked> Sliding</label>
+      <label><input type="radio" name="type_${id}" value="Hinged"> Hinged</label>
+    </div>
+
+    <p>Before choosing a Wardrobe please measure your alcove our wardrobe space. This helps us ensure the perfect fit for your space.</p>
+
+       <h4>Measurements (mm)</h4>
+    <label>Height<input type="number" id="height_${id}" min="2400" placeholder="2400" /></label>
+    <label>Width<input type="number" id="width_${id}" min="1100" placeholder="1100" /></label>
+    <label>Depth<input type="number" id="depth_${id}" min="610" placeholder="610" /></label>
+
+
+
+
+    <div id="sliding_${id}" style="margin-top:8px;">
+      <label><strong>Style (choose one)</strong></label>
+      <p>Refer to your brochure for more detail.</p>
+      <div class="image-scroll">
+        ${[1,2,3,4,5].map(n=>`
+          <div class="image-placeholder">Img ${n}</div>
+          <label><input type="radio" name="style_${id}" value="Style ${n}"> ${n}</label>
+        `).join('')}
+      </div>
+      <label>A Finish
+        <select id="finishA_${id}">
+          <option value="">Select</option><option>White</option><option>Grey</option><option>Oak</option>
+        </select>
+      </label>
+      <label>B Finish
+        <select id="finishB_${id}">
+          <option value="">Select</option><option>White</option><option>Grey</option><option>Oak</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="hinged_${id}" style="display:none; margin-top:8px;">
+      <label>C Finish
+        <select id="finishC_${id}">
+          <option value="">Select</option><option>White</option><option>Grey</option><option>Oak</option>
+        </select>
+      </label>
+      <label>Handle Upgrade
+        <select id="handle_${id}">
+          <option value="">Select</option><option>Yes</option><option>No</option>
+        </select>
+      </label>
+    </div>
+
+    <h4>Extras</h4>
+    <label>Internal Shelving
+      <select id="shelving_${id}"><option value="">Select</option><option>White</option><option>Grey</option><option>Oak</option></select>
+    </label>
+    <label>End Panel Required
+      <select id="endPanel_${id}"><option value="">Select</option><option>Yes</option><option>No</option></select>
+    </label>
+    
+
+    <div>${bedroomCount>1?`<button class="danger" onclick="removeBedroom(this)">Remove Bedroom</button>`:''}</div>
+  `;
+
+  container.appendChild(block);
+
+  const radios = block.querySelectorAll(`input[name="type_${id}"]`);
+  radios.forEach(r => r.addEventListener('change', () => toggleType(block, id)));
+  toggleType(block, id);
+}
+
+/* --- Toggle Sliding/Hinged --- */
+function toggleType(block, id){
+  const type = block.querySelector(`input[name="type_${id}"]:checked`).value;
+  document.getElementById(`sliding_${id}`).style.display = type==='Sliding'?'block':'none';
+  document.getElementById(`hinged_${id}`).style.display = type==='Hinged'?'block':'none';
+}
+
+/* --- Remove Bedroom --- */
+function removeBedroom(btn){
+  const block = btn.closest('.bedroom-block');
+  if(!block) return;
+  block.remove();
+  bedroomCount--;
+}
+
+/* --- Build Review --- */
+function buildReview(){
+  const review = document.getElementById('reviewContent');
+  let html = '';
+
+  // Contact
+  html += `<h3>Contact Information <button class="edit-link" onclick="showPage('page-contact')">Edit</button></h3>`;
+  html += `<p><strong>Name:</strong> ${escapeHtml(document.getElementById('contactName').value)}</p>`;
+  html += `<p><strong>Phone:</strong> ${escapeHtml(document.getElementById('contactNumber').value)}</p>`;
+  html += `<p><strong>Email:</strong> ${escapeHtml(document.getElementById('contactEmail').value)}</p>`;
+  html += `<p><strong>Site Name:</strong> ${escapeHtml(document.getElementById('siteName').value)}</p>`;
+  html += `<p><strong>Site Address:</strong> ${escapeHtml(document.getElementById('siteAddress').value)}</p>`;
+  html += `<p><strong>Site Postcode:</strong> ${escapeHtml(document.getElementById('sitePostcode').value)}</p>`;
+  html += `<p><strong>House Type:</strong> ${escapeHtml(document.getElementById('houseType').value)}</p>`;
+  html += `<p><strong>Plot Number:</strong> ${escapeHtml(document.getElementById('plotNumber').value)}</p><hr>`;
+
+  // Bedrooms
+  html += `<h3>Bedrooms <button class="edit-link" onclick="showPage('page-bedrooms')">Edit</button></h3>`;
+  const bedrooms = document.querySelectorAll('.bedroom-block');
+  if(bedrooms.length===0) html += '<p>No bedrooms added.</p>';
+  bedrooms.forEach((b,i)=>{
+    const type = b.querySelector(`input[name^="type_"]:checked`)?.value || '';
+    html += `<h4>Bedroom ${i+1}</h4><p>Type: ${escapeHtml(type)}</p>`;
+    if(type==='Sliding'){
+      html += `<p>Style: ${escapeHtml(b.querySelector(`input[name^="style_"]:checked`)?.value || '')}</p>`;
+      html += `<p>A Finish: ${escapeHtml(b.querySelector(`#finishA_${b.dataset.id}`).value)}</p>`;
+      html += `<p>B Finish: ${escapeHtml(b.querySelector(`#finishB_${b.dataset.id}`).value)}</p>`;
+    } else if(type==='Hinged'){
+      html += `<p>C Finish: ${escapeHtml(b.querySelector(`#finishC_${b.dataset.id}`).value)}</p>`;
+      html += `<p>Handle Upgrade: ${escapeHtml(b.querySelector(`#handle_${b.dataset.id}`).value)}</p>`;
+    }
+    html += `<p>Height: ${escapeHtml(b.querySelector(`#height_${b.dataset.id}`).value)} mm</p>`;
+    html += `<p>Width: ${escapeHtml(b.querySelector(`#width_${b.dataset.id}`).value)} mm</p>`;
+    html += `<p>Depth: ${escapeHtml(b.querySelector(`#depth_${b.dataset.id}`).value)} mm</p>`;
+    html += `<p>Shelving: ${escapeHtml(b.querySelector(`#shelving_${b.dataset.id}`).value)}</p>`;
+    html += `<p>End Panel: ${escapeHtml(b.querySelector(`#endPanel_${b.dataset.id}`).value)}</p><hr>`;
+  });
+
+  // Delivery
+  html += `<h3>Delivery <button class="edit-link" onclick="showPage('page-dates')">Edit</button></h3>`;
+  html += `<p>Date: ${escapeHtml(document.getElementById('deliveryDate').value)}</p>`;
+
+  review.innerHTML = html;
+}
+
+/* --- Confirm via email --- */
+function confirmOrder(){
+  const lines = [];
+  lines.push('Wardrobe Order\n');
+  lines.push('Contact Information:');
+  lines.push(`Name: ${document.getElementById('contactName').value}`);
+  lines.push(`Phone: ${document.getElementById('contactNumber').value}`);
+  lines.push(`Email: ${document.getElementById('contactEmail').value}`);
+  lines.push(`Site Name: ${document.getElementById('siteName').value}`);
+  lines.push(`Site Address: ${document.getElementById('siteAddress').value}`);
+  lines.push(`Site Postcode: ${document.getElementById('sitePostcode').value}`);
+  lines.push(`House Type: ${document.getElementById('houseType').value}`);
+  lines.push(`Plot Number: ${document.getElementById('plotNumber').value}`);
+  lines.push('');
+
+  const bedrooms = document.querySelectorAll('.bedroom-block');
+  bedrooms.forEach((b,i)=>{
+    const type = b.querySelector(`input[name^="type_"]:checked`)?.value || '';
+    lines.push(`Bedroom ${i+1}:`);
+    lines.push(`Type: ${type}`);
+    if(type==='Sliding'){
+      lines.push(`Style: ${b.querySelector(`input[name^="style_"]:checked`)?.value || ''}`);
+      lines.push(`A Finish: ${b.querySelector(`#finishA_${b.dataset.id}`).value}`);
+      lines.push(`B Finish: ${b.querySelector(`#finishB_${b.dataset.id}`).value}`);
+    } else if(type==='Hinged'){
+      lines.push(`C Finish: ${b.querySelector(`#finishC_${b.dataset.id}`).value}`);
+      lines.push(`Handle Upgrade: ${b.querySelector(`#handle_${b.dataset.id}`).value}`);
+    }
+    lines.push(`Height: ${b.querySelector(`#height_${b.dataset.id}`).value} mm`);
+    lines.push(`Width: ${b.querySelector(`#width_${b.dataset.id}`).value} mm`);
+    lines.push(`Depth: ${b.querySelector(`#depth_${b.dataset.id}`).value} mm`);
+    lines.push(`Shelving: ${b.querySelector(`#shelving_${b.dataset.id}`).value}`);
+    lines.push(`End Panel: ${b.querySelector(`#endPanel_${b.dataset.id}`).value}`);
+    lines.push('');
+  });
+
+  lines.push('Delivery:');
+  lines.push(`Date: ${document.getElementById('deliveryDate').value}`);
+
+  const subject = encodeURIComponent('Wardrobe Order');
+  const body = encodeURIComponent(lines.join('\r\n'));
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+}
+
+/* --- Escape HTML --- */
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;')
+                    .replace(/</g,'&lt;')
+                    .replace(/>/g,'&gt;')
+                    .replace(/"/g,'&quot;');
+}
+</script>
+
+</body>
+</html>
+

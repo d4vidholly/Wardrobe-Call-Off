@@ -1,0 +1,119 @@
+/* Body */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f2f2f2;
+}
+
+/* Container */
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* Pages */
+.page {
+  display: none;
+  padding-bottom: 40px;
+}
+.page.active {
+  display: block;
+}
+
+/* Welcome page */
+#page-home h2, #page-home p {
+  text-align: center;
+}
+#page-home button {
+  display: block;
+  margin: 20px auto 0 auto;
+}
+
+/* Bedroom block */
+.bedroom-block {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+}
+
+.radio-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.image-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+.image-placeholder {
+  min-width: 64px;
+  min-height: 64px;
+  background: #eee;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  border-radius: 4px;
+}
+
+/* Inputs */
+select, input[type="text"], input[type="tel"], input[type="number"], input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  margin: 4px 0 12px 0;
+  box-sizing: border-box;
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 16px;
+  margin: 6px 6px 6px 0;
+  border: none;
+  border-radius: 4px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+.btn:hover { background: #0056b3; }
+
+.danger {
+  background: #c33;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-link {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.9em;
+  margin-left: 10px;
+}
+
+.small-help {
+  font-size: 12px;
+  color: #666;
+}
+
+.buttons {
+  margin-top: 12px;
+}
